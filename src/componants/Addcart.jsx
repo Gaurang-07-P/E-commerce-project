@@ -4,7 +4,7 @@ import { cartContext } from "../cartContext";
 
 export default function Addcart(props) {
   let product = props.product
-let itemid = product.id
+  let itemid = product.id
 
   const [count, setcount] = useState(0)
 
@@ -26,43 +26,48 @@ let itemid = product.id
     setcount(count + 1)
   }
 
-  let decrement = ()=> {
+  let decrement = () => {
     let idx = cart_items.findIndex((i) => i.pid === itemid)
 
     cart_items[idx].quantity = cart_items[idx].quantity - 1
+
+    if(cart_items[idx].quantity == 0){
+      cart_items.splice(idx,1)
+      cartCNTX.set_cart_items_ary(cart_items)
+    }
     cartCNTX.set_cart_items_ary(cart_items)
     setcount(count - 1)
   }
 
   let addcart = () => {
 
-     let cartitem = {
-    pid: product.id,
-    title: product.title,
-    price: product.price,
-    thumbnail: product.thumbnail,
-    quantity: 1
-  }
+    let cartitem = {
+      pid: product.id,
+      title: product.title,
+      price: product.price,
+      thumbnail: product.thumbnail,
+      quantity: 1
+    }
 
     cart_items.push(cartitem)
 
     cartCNTX.set_cart_items_ary(cart_items)
     setcount(1)
   }
-  let add_minus =  <div className="flex gap-5">
-                {count==0?  <button className="h-5 w-5 p-3 bg-red-400 flex items-center justify-center">-</button> :
-               <button className="h-5 w-5 p-3 bg-red-400 flex items-center justify-center" onClick={()=>decrement()}>-</button> }
-                
-                <h1>{count}</h1>
-                
+  let add_minus = <div className="flex gap-5">
+    {count == 0 ? <button className="h-5 w-5 p-3 bg-red-400 flex items-center justify-center">-</button> :
+      <button className="h-5 w-5 p-3 bg-red-400 flex items-center justify-center" onClick={() => decrement()}>-</button>}
 
-               {count==4? <button className="h-5 w-5 p-3 bg-green-400 flex items-center justify-center" disabled>+</button> :
-               <button className="h-5 w-5 p-3 bg-green-400 flex items-center justify-center"  onClick={()=>increment()}>+</button> }
-                
-            </div>
+    <h1>{count}</h1>
+
+
+    {count == 4 ? <button className="h-5 w-5 p-3 bg-green-400 flex items-center justify-center" disabled>+</button> :
+      <button className="h-5 w-5 p-3 bg-green-400 flex items-center justify-center" onClick={() => increment()}>+</button>}
+
+  </div>
 
   let ui = (count > 0) ? add_minus : <div>
-    
+
     <input type="button" value="Add to cart" className="bg-red-400 px-2 py-1 rounded-3xl text-white " onClick={() => addcart()} />
   </div>
 
